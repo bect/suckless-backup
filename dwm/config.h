@@ -15,16 +15,15 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=10" };
 static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=10";
-static const char col_cocoa0[]      = "#1f1919"; /* Deep Dark Cocoa (Background) */
-static const char col_cocoa1[]      = "#382c2c"; /* Muted Truffle (Inactive Border) */
+static const char col_cocoa0[]      = "#2a1718"; /* Unified Reddish Cocoa (Background) */
+static const char col_cocoa1[]      = "#3e2b2c"; /* Muted Slate-Rose (Inactive Border) */
 static const char col_cocoa4[]      = "#dfcfc7"; /* Warm Almond (Normal Text) */
-static const char col_merlot8[]     = "#a8434c"; /* Crimson Merlot (Active Background) */
-static const char col_merlot9[]     = "#c8646c"; /* Soft Rosewood (Active Window Border) */
+static const char col_merlot8[]     = "#c8646c"; /* Soft Rosewood (Active Highlight / Active Text) */
 
 static const char *colors[][3]      = {
 	/*               fg          bg          border   */
 	[SchemeNorm] = { col_cocoa4, col_cocoa0, col_cocoa1 },
-	[SchemeSel]  = { col_cocoa0, col_merlot8, col_merlot9 },
+	[SchemeSel]  = { col_merlot8, col_cocoa0, col_merlot8 }, /* Unified BG, Rosewood FG text */
 };
 
 static const char *const autostart[] = {
