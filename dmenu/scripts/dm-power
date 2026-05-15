@@ -4,7 +4,6 @@
 # Designed for total desktop synergy with the luxury cafe theme
 
 # Define choices using universally-compatible Nerd Font icons
-# Added "  Emojis" right next to system utilities
 options="  Shutdown\n  Reboot\n  Suspend\n  Logout\n  Emojis"
 
 # Display choices via Dmenu with an elegant custom prompt
@@ -25,57 +24,34 @@ case "$chosen" in
         killall dwm
         ;;
     "  Emojis")
-        # High-Utility Curated Emojis List
-        emojis=$(cat <<EOF
-😁 Smile
-😂 Laughing
-😍 Heart-Eyes
-😎 Cool
-🤔 Thinking
-😭 Crying
-😡 Angry
-👍 Thumbs-Up
-❤️ Red-Heart
-✨ Sparkles
-🔥 Fire
-🎉 Party
-🚀 Rocket
-💡 Idea / Lightbulb
-☕ Coffee
-💻 Laptop
-🎨 Palette
-🏆 Trophy
-🎯 Target
-✅ Checkmark
-❌ Cross-Mark
-🔔 Bell
-🔒 Lock
-🔑 Key
-🎁 Gift
-🌟 Star
-🤝 Handshake
-🙏 Pray / Thanks
-👀 Eyes
-🍕 Pizza
-🍺 Beer
-🎮 Controller
-EOF
-)
+        # Standard UNIX Path for installed system data
+        EMOJI_FILE="/usr/local/share/dm-power/emojis.txt"
+        
+        # Elegant Fallback: If not installed, search in current script directory (Dev mode)
+        if [ ! -f "$EMOJI_FILE" ]; then
+            EMOJI_FILE="$(dirname "$(readlink -f "$0")")/emojis.txt"
+        fi
+        
+        # Verify file exists before proceeding
+        if [ ! -f "$EMOJI_FILE" ]; then
+            notify-send "Emoji Error" "Missing emoji database: emojis.txt" -i dialog-error
+            exit 1
+        fi
+        
+        # Instant dynamic load into memory (Exact equivalent of C's include/cat)
+        emojis=$(< "$EMOJI_FILE")
+        
         # Feed curated list into centered dmenu
         chosen_emoji=$(printf "$emojis" | dmenu -i -p "Pick Emoji:")
         
         # If selection was made, parse and push to clipboard
         if [ -n "$chosen_emoji" ]; then
-            # Extract only the first field (the emoji itself)
             emoji=$(echo "$chosen_emoji" | awk '{print $1}')
             
-            # Attempt clipboard copy if xclip is available
             if command -v xclip >/dev/null; then
                 echo -n "$emoji" | xclip -selection clipboard
-                # Send beautiful desktop notification
                 notify-send "Clipboard Copy" "Copied '$emoji' to your clipboard!" -i face-smile
             else
-                # Fallback if xclip is missing
                 notify-send "Error" "Please install xclip to copy emojis!" -i dialog-error
             fi
         fi

@@ -30,7 +30,7 @@ dist: clean
 	cp LICENSE Makefile README arg.h config.def.h config.mk dmenu.1\
 		drw.h util.h dmenu_path dmenu_run stest.1 $(SRC)\
 		dmenu-$(VERSION)
-	cp -f scripts/dm-power dmenu-$(VERSION)/scripts
+	cp -f scripts/dm-power scripts/emojis.txt dmenu-$(VERSION)/scripts
 	tar -cf dmenu-$(VERSION).tar dmenu-$(VERSION)
 	gzip dmenu-$(VERSION).tar
 	rm -rf dmenu-$(VERSION)
@@ -44,6 +44,9 @@ install: all
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu_run
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dm-power
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/stest
+	mkdir -p $(DESTDIR)$(PREFIX)/share/dm-power
+	cp -f scripts/emojis.txt $(DESTDIR)$(PREFIX)/share/dm-power
+	chmod 644 $(DESTDIR)$(PREFIX)/share/dm-power/emojis.txt
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
 	sed "s/VERSION/$(VERSION)/g" < dmenu.1 > $(DESTDIR)$(MANPREFIX)/man1/dmenu.1
 	sed "s/VERSION/$(VERSION)/g" < stest.1 > $(DESTDIR)$(MANPREFIX)/man1/stest.1
@@ -58,5 +61,6 @@ uninstall:
 		$(DESTDIR)$(PREFIX)/bin/stest\
 		$(DESTDIR)$(MANPREFIX)/man1/dmenu.1\
 		$(DESTDIR)$(MANPREFIX)/man1/stest.1
+	rm -rf $(DESTDIR)$(PREFIX)/share/dm-power
 
 .PHONY: all clean dist install uninstall
