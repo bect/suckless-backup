@@ -100,7 +100,7 @@ static const Key keys[] = {
 	{ 0,                            XF86XK_MonBrightnessUp,   spawn,          {.v = brupcmd } },
 	{ 0,                            XF86XK_MonBrightnessDown, spawn,          {.v = brdowncmd } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,                       XK_Escape, spawn,          {.v = powercmd } },
+	{ MODKEY,                       XK_o,      spawn,          {.v = powercmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
