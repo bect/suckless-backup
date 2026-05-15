@@ -19,6 +19,7 @@
 	#define POWER_SUPPLY_ENERGY   "/sys/class/power_supply/%s/energy_now"
 	#define POWER_SUPPLY_CURRENT  "/sys/class/power_supply/%s/current_now"
 	#define POWER_SUPPLY_POWER    "/sys/class/power_supply/%s/power_now"
+	#define POWER_SUPPLY_VOLTAGE  "/sys/class/power_supply/%s/voltage_now"
 
 	static const char *
 	pick(const char *bat, const char *f1, const char *f2, char *path,
@@ -111,6 +112,63 @@
 
 		return "";
 	}
+
+	const char *
+	battery_watts(const char *bat)
+	{
+		int cap_perc;
+		char path[PATH_MAX];
+		char state[13];
+		const char *sign = "";
+		const char *icon = "";
+		uintmax_t power_now, current_now, voltage_now;
+		double watts = 0.0;
+
+		/* 1. Get capacity percentage for icon state */
+		if (esnprintf(path, sizeof(path), POWER_SUPPLY_CAPACITY, bat) >= 0) {
+			if (pscanf(path, "%d", &cap_perc) == 1) {
+				if (cap_perc >= 95)
+					icon = "";
+				else if (cap_perc >= 70)
+					icon = "";
+				else if (cap_perc >= 40)
+					icon = "";
+				else if (cap_perc >= 20)
+					icon = "";
+				else
+					icon = "";
+			}
+		}
+
+		/* 2. Get charging/discharging sign */
+		if (esnprintf(path, sizeof(path), POWER_SUPPLY_STATUS, bat) >= 0 &&
+		    pscanf(path, "%12[a-zA-Z ]", state) == 1) {
+			if (!strcmp(state, "Charging"))
+				sign = "+";
+			else if (!strcmp(state, "Discharging"))
+				sign = "-";
+		}
+
+		/* 3. Calculate real-time Watt usage */
+		if (esnprintf(path, sizeof(path), POWER_SUPPLY_POWER, bat) > 0 &&
+		    access(path, R_OK) == 0) {
+			if (pscanf(path, "%ju", &power_now) == 1) {
+				watts = (double)power_now / 1000000.0;
+			}
+		} else if (esnprintf(path, sizeof(path), POWER_SUPPLY_CURRENT, bat) > 0 &&
+		           access(path, R_OK) == 0) {
+			if (pscanf(path, "%ju", &current_now) == 1) {
+				char vpath[PATH_MAX];
+				if (esnprintf(vpath, sizeof(vpath), POWER_SUPPLY_VOLTAGE, bat) > 0 &&
+				    pscanf(vpath, "%ju", &voltage_now) == 1) {
+					watts = ((double)current_now * (double)voltage_now) / 1000000000000.0;
+				}
+			}
+		}
+
+		/* Format: "icon signwatts" -> "■■■ -3.50 W" */
+		return bprintf("%s %s%.2f W", icon, sign, watts);
+	}
 #elif defined(__OpenBSD__)
 	#include <fcntl.h>
 	#include <machine/apmvar.h>
@@ -190,6 +248,12 @@
 
 		return NULL;
 	}
+
+	const char *
+	battery_watts(const char *unused)
+	{
+		return NULL;
+	}
 #elif defined(__FreeBSD__)
 	#include <sys/sysctl.h>
 
@@ -243,5 +307,11 @@
 			return NULL;
 
 		return bprintf("%uh %02um", rem / 60, rem % 60);
+	}
+
+	const char *
+	battery_watts(const char *unused)
+	{
+		return NULL;
 	}
 #endif

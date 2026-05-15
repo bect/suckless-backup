@@ -15,13 +15,11 @@
  * included, lowercase when off and uppercase when on.
  */
 const char *
-keyboard_indicators(const char *fmt)
+keyboard_indicators(const char *unused)
 {
 	Display *dpy;
 	XKeyboardState state;
-	size_t fmtlen, i, n;
-	int togglecase, isset;
-	char key;
+	int caps_on, num_on;
 
 	if (!(dpy = XOpenDisplay(NULL))) {
 		warn("XOpenDisplay: Failed to open display");
@@ -30,21 +28,17 @@ keyboard_indicators(const char *fmt)
 	XGetKeyboardControl(dpy, &state);
 	XCloseDisplay(dpy);
 
-	fmtlen = strnlen(fmt, 4);
-	for (i = n = 0; i < fmtlen; i++) {
-		key = tolower(fmt[i]);
-		if (key != 'c' && key != 'n')
-			continue;
+	/* Extract Caps Lock (bit 0) and Num Lock (bit 1) states */
+	caps_on = state.led_mask & 1;
+	num_on = state.led_mask & 2;
 
-		togglecase = (i + 1 >= fmtlen || fmt[i + 1] != '?');
-		isset = (state.led_mask & (1 << (key == 'n')));
+	/* Format output: Only show icons and separator when they are actively ON */
+	if (caps_on && num_on)
+		return bprintf("  | ");
+	else if (caps_on)
+		return bprintf(" | ");
+	else if (num_on)
+		return bprintf(" | ");
 
-		if (togglecase)
-			buf[n++] = isset ? toupper(key) : key;
-		else if (isset)
-			buf[n++] = fmt[i];
-	}
-
-	buf[n] = 0;
-	return buf;
+	return ""; /* Both are OFF, show nothing to preserve screen space */
 }

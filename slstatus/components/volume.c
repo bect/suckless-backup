@@ -1,6 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -185,37 +186,47 @@
 		return bprintf("%d", value);
 	}
 #else
-	#include <sys/soundcard.h>
-
 	const char *
-	vol_perc(const char *card)
+	vol_perc(const char *unused)
 	{
-		size_t i;
-		int v, afd, devmask;
-		char *vnames[] = SOUND_DEVICE_NAMES;
+		FILE *fp;
+		char buf[512];
+		int is_muted = 0;
+		int vol = 0;
+		const char *icon = "";
 
-		if ((afd = open(card, O_RDONLY | O_NONBLOCK)) < 0) {
-			warn("open '%s':", card);
+		/* Read both mute status and volume in a single process call */
+		if (!(fp = popen("pactl get-sink-mute @DEFAULT_SINK@ 2>/dev/null; pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null", "r")))
 			return NULL;
-		}
 
-		if (ioctl(afd, (int)SOUND_MIXER_READ_DEVMASK, &devmask) < 0) {
-			warn("ioctl 'SOUND_MIXER_READ_DEVMASK':");
-			close(afd);
-			return NULL;
-		}
-		for (i = 0; i < LEN(vnames); i++) {
-			if (devmask & (1 << i) && !strcmp("vol", vnames[i])) {
-				if (ioctl(afd, MIXER_READ(i), &v) < 0) {
-					warn("ioctl 'MIXER_READ(%ld)':", i);
-					close(afd);
-					return NULL;
+		while (fgets(buf, sizeof(buf), fp)) {
+			if (strstr(buf, "Mute: yes")) {
+				is_muted = 1;
+			} else if (strstr(buf, "Volume:")) {
+				char *p = strchr(buf, '%');
+				if (p) {
+					/* Backtrack to find the beginning of the volume number */
+					char *start = p;
+					while (start > buf && *(start - 1) != ' ' && *(start - 1) != '/') {
+						start--;
+					}
+					vol = atoi(start);
 				}
 			}
 		}
+		pclose(fp);
 
-		close(afd);
-
-		return bprintf("%d", v & 0xff);
+		if (is_muted) {
+			icon = "";
+			return bprintf("%s Mute", icon);
+		} else {
+			if (vol >= 70)
+				icon = "";
+			else if (vol >= 30)
+				icon = "";
+			else
+				icon = "";
+			return bprintf("%s %d%%", icon, vol);
+		}
 	}
 #endif

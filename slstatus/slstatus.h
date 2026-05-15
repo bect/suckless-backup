@@ -4,6 +4,7 @@
 const char *battery_perc(const char *);
 const char *battery_remaining(const char *);
 const char *battery_state(const char *);
+const char *battery_watts(const char *);
 
 /* cat */
 const char *cat(const char *path);
@@ -47,6 +48,7 @@ const char *load_avg(const char *unused);
 /* netspeeds */
 const char *netspeed_rx(const char *interface);
 const char *netspeed_tx(const char *interface);
+const char *netspeed(const char *interface);
 
 /* num_files */
 const char *num_files(const char *path);
