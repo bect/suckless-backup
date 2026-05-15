@@ -1,0 +1,3 @@
+[submodule "blume"]
+	path = blume
+	url = ../blume
