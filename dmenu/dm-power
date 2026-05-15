@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Clean, minimalist Desktop Power Hub powered by centered Dmenu
+# Designed for total desktop synergy with the luxury cafe theme
+
+# Define choices using universally-compatible Nerd Font icons
+options="  Shutdown\n  Reboot\n  Suspend\n  Logout"
+
+# Display choices via Dmenu with an elegant custom prompt
+chosen=$(printf "$options" | dmenu -p "Desktop Hub:")
+
+# Map selections directly to high-performance systemd targets
+case "$chosen" in
+    "  Shutdown")
+        systemctl poweroff
+        ;;
+    "  Reboot")
+        systemctl reboot
+        ;;
+    "  Suspend")
+        systemctl suspend
+        ;;
+    "  Logout")
+        killall dwm
+        ;;
+    *)
+        exit 0
+        ;;
+esac
