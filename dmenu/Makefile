@@ -28,17 +28,17 @@ clean:
 dist: clean
 	mkdir -p dmenu-$(VERSION)/scripts
 	cp LICENSE Makefile README arg.h config.def.h config.mk dmenu.1\
-		drw.h util.h dmenu_path dmenu_run stest.1 $(SRC)\
+		drw.h util.h stest.1 $(SRC)\
 		dmenu-$(VERSION)
-	cp -f scripts/dm-power scripts/dm-emoji scripts/dm-hub scripts/emojis.txt dmenu-$(VERSION)/scripts
+	cp -f scripts/dm-power scripts/dm-emoji scripts/dm-hub scripts/dmenu_path scripts/dmenu_run scripts/emojis.txt dmenu-$(VERSION)/scripts
 	tar -cf dmenu-$(VERSION).tar dmenu-$(VERSION)
 	gzip dmenu-$(VERSION).tar
 	rm -rf dmenu-$(VERSION)
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	cp -f dmenu dmenu_path dmenu_run stest $(DESTDIR)$(PREFIX)/bin
-	cp -f scripts/dm-power scripts/dm-emoji scripts/dm-hub $(DESTDIR)$(PREFIX)/bin
+	cp -f dmenu stest $(DESTDIR)$(PREFIX)/bin
+	cp -f scripts/dmenu_path scripts/dmenu_run scripts/dm-power scripts/dm-emoji scripts/dm-hub $(DESTDIR)$(PREFIX)/bin
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu_path
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu_run
