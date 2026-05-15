@@ -1,0 +1,26 @@
+# Object files generated during compilation
+*.o
+
+# Release archives
+*.tar.gz
+
+# Compiled binaries
+/dmenu/dmenu
+/dmenu/stest
+/dwm/dwm
+/st/st
+/slstatus/slstatus
+
+# [Config Note] -------------------------------------------------------
+# In Suckless tools, running `make` generates `config.h` from `config.def.h`.
+# To track your custom configurations in Git, we DO NOT ignore config.h by 
+# default. This ensures your edits are safely saved to your GitHub repo!
+# 
+# (If you strictly only customize `config.def.h` and want to ignore the 
+# generated `config.h`, you can uncomment the line below):
+# config.h
+
+# Patch files
+*.diff
+*.orig
+*.rej
