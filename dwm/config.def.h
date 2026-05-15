@@ -15,16 +15,16 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=10" };
 static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=10";
-static const char col_nord0[]       = "#2e3440"; /* Deep Polar Night (Background) */
-static const char col_nord1[]       = "#3b4252"; /* Muted Slate (Inactive Border) */
-static const char col_nord4[]       = "#d8dee9"; /* Soft Snow (Normal Text) */
-static const char col_nord8[]       = "#88c0d0"; /* Frost Ice-Blue (Active Background) */
-static const char col_nord9[]       = "#81a1c1"; /* Glacial Blue (Active Window Border) */
+static const char col_cocoa0[]      = "#1f1919"; /* Deep Dark Cocoa (Background) */
+static const char col_cocoa1[]      = "#382c2c"; /* Muted Truffle (Inactive Border) */
+static const char col_cocoa4[]      = "#dfcfc7"; /* Warm Almond (Normal Text) */
+static const char col_merlot8[]     = "#a8434c"; /* Crimson Merlot (Active Background) */
+static const char col_merlot9[]     = "#c8646c"; /* Soft Rosewood (Active Window Border) */
 
 static const char *colors[][3]      = {
-	/*               fg         bg         border   */
-	[SchemeNorm] = { col_nord4, col_nord0, col_nord1 },
-	[SchemeSel]  = { col_nord0, col_nord8, col_nord9 },
+	/*               fg          bg          border   */
+	[SchemeNorm] = { col_cocoa4, col_cocoa0, col_cocoa1 },
+	[SchemeSel]  = { col_cocoa0, col_merlot8, col_merlot9 },
 };
 
 static const char *const autostart[] = {
@@ -76,7 +76,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_nord0, "-nf", col_nord4, "-sb", col_nord8, "-sf", col_nord0, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_cocoa0, "-nf", col_cocoa4, "-sb", col_merlot8, "-sf", col_cocoa0, NULL };
 static const char *termcmd[]  = { "st", NULL };
 static const char *brupcmd[]  = { "brightnessctl", "set", "5%+", NULL };
 static const char *brdowncmd[] = { "brightnessctl", "set", "5%-", NULL };
