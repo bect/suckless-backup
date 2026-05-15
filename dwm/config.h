@@ -31,6 +31,7 @@ static const char *const autostart[] = {
 	"nm-applet", NULL,
 	"blueman-applet", NULL,
 	"dunst", NULL,
+	"blume", NULL,
 	NULL /* terminate */
 };
 
