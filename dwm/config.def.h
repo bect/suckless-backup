@@ -56,10 +56,10 @@ static const int refreshrate = 60;   /* refresh rate (per second) for client mov
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
-	{ "><>",      NULL },    /* no layout function means floating behavior */
-	{ "[M]",      monocle },
-	{ "###",      gaplessgrid },
+	{ "  ",      tile },    /* first entry is default */
+	{ "  ",      NULL },    /* no layout function means floating behavior */
+	{ "  ",      monocle },
+	{ "  ",      gaplessgrid },
 };
 
 /* key definitions */
