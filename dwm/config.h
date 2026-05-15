@@ -18,12 +18,12 @@ static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=10";
 static const char col_cocoa0[]      = "#2a1718"; /* Unified Reddish Cocoa (Background) */
 static const char col_cocoa1[]      = "#3e2b2c"; /* Muted Slate-Rose (Inactive Border) */
 static const char col_cocoa4[]      = "#dfcfc7"; /* Warm Almond (Normal Text) */
-static const char col_merlot8[]     = "#c8646c"; /* Soft Rosewood (Active Highlight / Active Text) */
+static const char col_merlot8[]     = "#ac3038"; /* Deep Velvet Crimson (Active Highlight / Active Text) */
 
 static const char *colors[][3]      = {
 	/*               fg          bg          border   */
 	[SchemeNorm] = { col_cocoa4, col_cocoa0, col_cocoa1 },
-	[SchemeSel]  = { col_merlot8, col_cocoa0, col_merlot8 }, /* Unified BG, Rosewood FG text */
+	[SchemeSel]  = { col_merlot8, col_cocoa0, col_merlot8 }, /* Unified BG, Crimson FG text */
 };
 
 static const char *const autostart[] = {
