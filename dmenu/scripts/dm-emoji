@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# Specialized, high-speed standalone Emoji Picker powered by Dmenu
+# Designed for modular, specialized execution in the Unix style
+
+# Standard UNIX Path for installed system data
+EMOJI_FILE="/usr/local/share/dm-power/emojis.txt"
+
+# Elegant Fallback for local workspace development
+if [ ! -f "$EMOJI_FILE" ]; then
+    EMOJI_FILE="$(dirname "$(readlink -f "$0")")/emojis.txt"
+fi
+
+# Verify file presence
+if [ ! -f "$EMOJI_FILE" ]; then
+    notify-send "Emoji Error" "Missing emoji database: emojis.txt" -i dialog-error
+    exit 1
+fi
+
+# Instant dynamic load into memory
+emojis=$(< "$EMOJI_FILE")
+
+# Prompt user via centered Dmenu
+chosen_emoji=$(printf "$emojis" | dmenu -i -p "Pick Emoji:")
+
+# Process selection and push to clipboard
+if [ -n "$chosen_emoji" ]; then
+    emoji=$(echo "$chosen_emoji" | awk '{print $1}')
+    
+    if command -v xclip >/dev/null; then
+        echo -n "$emoji" | xclip -selection clipboard
+        notify-send "Clipboard Copy" "Copied '$emoji' to your clipboard!" -i face-smile
+    else
+        notify-send "Error" "Please install xclip to copy emojis!" -i dialog-error
+    fi
+fi

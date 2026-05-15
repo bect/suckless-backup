@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# Central Desktop Command Hub powered by centered Dmenu
+# Functions as a high-level orchestrator managing specialized desktop tools
+
+# Unified selections with premium Nerd Font markers
+options="⚡  Desktop Power\n  Emoji Picker"
+
+# Prompt user via master centered Dmenu
+chosen=$(printf "$options" | dmenu -p "Command Deck:")
+
+# Determine command paths (Smart system/local path mapping)
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+if [ -f "$SCRIPT_DIR/dm-power" ]; then
+    # Dev/Local mode
+    POWER_EXEC="$SCRIPT_DIR/dm-power"
+    EMOJI_EXEC="$SCRIPT_DIR/dm-emoji"
+else
+    # Production/System mode
+    POWER_EXEC="dm-power"
+    EMOJI_EXEC="dm-emoji"
+fi
+
+# Route to specialist tools depending on select vectors
+case "$chosen" in
+    "⚡  Desktop Power")
+        exec "$POWER_EXEC"
+        ;;
+    "  Emoji Picker")
+        exec "$EMOJI_EXEC"
+        ;;
+    *)
+        exit 0
+        ;;
+esac
