@@ -6,6 +6,30 @@
 #include <string.h>
 #include <time.h>
 #include <X11/Xlib.h>
+#include <X11/Xatom.h>
+
+static int
+is_bar_visible(Display *d, Window r)
+{
+	Atom actual_type;
+	int actual_format;
+	unsigned long nitems, bytes_after;
+	unsigned char *prop = NULL;
+	int visible = 1;
+
+	Atom atom = XInternAtom(d, "_DWM_BAR_VISIBLE", True);
+	if (atom == None)
+		return 1;
+
+	if (XGetWindowProperty(d, r, atom, 0, 1, False, XA_CARDINAL,
+	                       &actual_type, &actual_format, &nitems, &bytes_after,
+	                       &prop) == Success && prop) {
+		if (nitems > 0)
+			visible = *(unsigned long *)prop;
+		XFree(prop);
+	}
+	return visible;
+}
 
 #include "arg.h"
 #include "slstatus.h"
@@ -83,6 +107,12 @@ main(int argc, char *argv[])
 		die("XOpenDisplay: Failed to open display");
 
 	do {
+		if (!sflag && !is_bar_visible(dpy, DefaultRootWindow(dpy))) {
+			struct timespec sleep_time = { .tv_sec = 2, .tv_nsec = 0 };
+			nanosleep(&sleep_time, NULL);
+			continue;
+		}
+
 		if (clock_gettime(CLOCK_MONOTONIC, &start) < 0)
 			die("clock_gettime:");
 

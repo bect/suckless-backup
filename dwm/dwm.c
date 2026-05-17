@@ -2243,6 +2243,13 @@ updatebarpos(Monitor *m)
 		m->wy = m->topbar ? m->wy + bh : m->wy;
 	} else
 		m->by = -bh;
+
+	/* Publish bar visibility state to X11 Root Window */
+	if (m == selmon) {
+		Atom atom = XInternAtom(dpy, "_DWM_BAR_VISIBLE", False);
+		unsigned long val = selmon->showbar;
+		XChangeProperty(dpy, root, atom, XA_CARDINAL, 32, PropModeReplace, (unsigned char *)&val, 1);
+	}
 }
 
 void
