@@ -88,6 +88,14 @@ static const char *medplay[]   = { "playerctl", "play-pause", NULL };
 static const char *mednext[]   = { "playerctl", "next", NULL };
 static const char *medprev[]   = { "playerctl", "previous", NULL };
 static const char *medstop[]   = { "playerctl", "stop", NULL };
+static const char *thunarcmd[]  = { "thunar", NULL };
+static const char *codecmd[]    = { "code", NULL };
+static const char *appfindercmd[] = { "xfce4-appfinder", NULL };
+static const char *firefoxcmd[] = { "firefox", NULL };
+static const char *bravecmd[]   = { "brave-browser-stable", NULL };
+static const char *obscmd[]     = { "obs", NULL };
+static const char *gimpcmd[]    = { "gimp", NULL };
+static const char *vimcmd[]     = { "st", "-e", "vim", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -100,6 +108,15 @@ static const Key keys[] = {
 	{ 0,                            XF86XK_AudioStop,         spawn,          {.v = medstop } },
 	{ 0,                            XF86XK_MonBrightnessUp,   spawn,          {.v = brupcmd } },
 	{ 0,                            XF86XK_MonBrightnessDown, spawn,          {.v = brdowncmd } },
+	/* Custom Application Shortcuts */
+	{ Mod4Mask,                     XK_slash,       spawn,          {.v = thunarcmd } },
+	{ Mod4Mask|ShiftMask,           XK_Return,      spawn,          {.v = codecmd } },
+	{ Mod4Mask,                     XK_p,           spawn,          {.v = appfindercmd } },
+	{ Mod4Mask,                     XK_bracketleft, spawn,          {.v = firefoxcmd } },
+	{ Mod4Mask,                     XK_bracketright,spawn,          {.v = bravecmd } },
+	{ Mod4Mask,                     XK_o,           spawn,          {.v = obscmd } },
+	{ Mod4Mask,                     XK_g,           spawn,          {.v = gimpcmd } },
+	{ MODKEY,                       XK_bracketright,spawn,          {.v = vimcmd } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_bracketleft, spawn,     {.v = hubcmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
